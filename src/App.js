@@ -5,7 +5,7 @@ import {message, notification, Spin, Tag, Descriptions, Row} from 'antd'
 import _ from 'lodash'
 import { getProfilesData } from './network' 
 
-function mapProfileData(rawData){
+function skimProfileData(rawData){
   return rawData.map(({name, email, dob, picture}) => ({
     name: name.first + ' ' + name.last,
     email,
@@ -13,58 +13,34 @@ function mapProfileData(rawData){
     imgUrl: picture.large
   }))
 }
-let remainingCardsNum;
-const REMAINING_CARD_THRESHOLD = 2;
+
+const REMAINING_PROFILES_THRESHOLD = 2;
 
 function App() {
   const [profiles, setProfiles] = useState([]);
-  const [currentProfileIndex, setProfileIndex] = useState(0);
   const [viewedProfiles, setViewedProfiles] = useState([]);
-  const [shouldPrefetchProfile, setShouldPrefetchProfile] = useState(false);
-  const [isLoading, setLoading] = useState(false)
+  const [currentProfileIndex, setProfileIndex] = useState(0);
 
   useEffect(() => {
     (async function getData (){
-      setLoading(true)
       const {results: rawData} = await getProfilesData();
-      const profileData = mapProfileData(rawData)
-      setProfiles(profileData)
-      setLoading(false)
-      remainingCardsNum = profileData.length;
+      setProfiles(profiles.concat(skimProfileData(rawData)));
     })()  
   }, [])
 
-  useEffect(() => {
-    if(shouldPrefetchProfile){
-      (async function getData (){  
-        notification['success']({
-          message: 'Prefetch 5 more cards',
-          description:
-            `There is only 1 left, time for getting more!` ,
-          duration: 1
-          });    
-        const {results: rawData} = await getProfilesData();
-        const profileData = mapProfileData(rawData)   
-        remainingCardsNum = profileData.length + remainingCardsNum;  
-        setProfiles(profiles.concat(profileData))
-        setLoading(false)
-        setShouldPrefetchProfile(false)         
-      })()
-    } 
-  }, [shouldPrefetchProfile])
-
-  useEffect(() => {
-    const isCurrentCardExist = currentProfileIndex <= profiles.length;
-    isCurrentCardExist && setLoading(false)
-  }, [isLoading])
+  const countRemainingProfiles = (currentProfileIndex, profiles) => (
+    profiles.length - currentProfileIndex  - 1
+  )
 
   const debouncedSwipe = _.debounce(function handleSwipe(type){
+    const remainingProfileCount = countRemainingProfiles(currentProfileIndex, profiles)
+    
     processCurrentCardAction();
     moveToNextCard();
 
     function processCurrentCardAction(){
       const changedViewedProfiles = viewedProfiles.concat(
-        {...profiles[currentProfileIndex], liked: type === 'like' ? true: false}
+        {...profiles[currentProfileIndex], liked: type === 'like'}
       )
       setViewedProfiles(changedViewedProfiles); 
       type === 'like' ?
@@ -73,21 +49,31 @@ function App() {
     }
     
     function moveToNextCard(){
-      setProfileIndex(currentProfileIndex + 1);
-      const isNextCardExist = profiles[currentProfileIndex + 1];
-      if(!isNextCardExist) {
-        setLoading(true) 
-        notification['warning']({
+      const isTimeToPrefetchData = remainingProfileCount <= REMAINING_PROFILES_THRESHOLD;
+      const isLoading = !remainingProfileCount;
+      setProfileIndex(currentProfileIndex + 1); 
+      if(isTimeToPrefetchData){
+        notification.success({
+            message: 'Prefetch 5 more cards',
+            duration: 1
+          }); 
+        (async function getData (){              
+          const {results: rawData} = await getProfilesData();
+          setProfiles(profiles.concat(skimProfileData(rawData)))    
+        })()
+      }
+      if(isLoading) {
+        notification.warning({
           message: 'Oops! Seem like internet connection is slow',
           duration: 1
         }); 
-      }
-      --remainingCardsNum
-      if( remainingCardsNum <= REMAINING_CARD_THRESHOLD){
-        setShouldPrefetchProfile(true)
-      }
+      }  
     }    
-  }, 200)
+  }, 300)
+
+  const remainingProfileCount = countRemainingProfiles(currentProfileIndex, profiles) + 1;
+  const isLoading = !remainingProfileCount;
+  const shouldPrefetchProfile = remainingProfileCount <= REMAINING_PROFILES_THRESHOLD; 
 
   return (
     <div className="App">
@@ -119,7 +105,7 @@ function App() {
         </Descriptions>
         </Row>        
         <p>
-          <strong>Current profile: {currentProfileIndex + 1}</strong>
+          <strong>Current profile index: {currentProfileIndex + 1}</strong>
         </p>
         {
           isLoading
