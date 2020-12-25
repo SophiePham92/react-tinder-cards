@@ -1,16 +1,27 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import ProfileCard from './components/profile-card';
-import profileData from './mock-data';
 import {message} from 'antd'
 import _ from 'lodash'
+import { getProfilesData } from './network'
 
 function App() {
   const [profiles, setProfiles] = useState([]);
   const [currentProfileIndex, setProfileIndex] = useState(0);
 
   useEffect(() => {
-    setProfiles(profileData)
+    (async function getData (){
+      const {results: rawData} = await getProfilesData();
+      const profileData = rawData.map(({name, email, dob, picture}) => {
+        return {
+          name: name.first + ' ' + name.last,
+          email,
+          age: dob.age,
+          imgUrl: picture.large
+        }
+      })
+      setProfiles(profileData)
+    })()  
   }, [])
 
   const debouncedSwipe = _.debounce(function handleSwipe(type){
@@ -36,13 +47,12 @@ function App() {
           <strong>{currentProfileIndex}</strong>
         </p> 
         <div style={{position: 'relative', width: 240}}>
-          {profileData.map(({name, age, distance, text, pics}, index) => {
+          {profiles.map(({name, age, email, imgUrl}, index) => {
             return <ProfileCard 
-                imgUrls={pics} 
+                imgUrl={imgUrl} 
                 name={name}
                 age={age}
-                text={text}
-                distance={distance}
+                email={email}
                 handleSwipe={debouncedSwipe} 
                 isShow={index === currentProfileIndex}
               />
