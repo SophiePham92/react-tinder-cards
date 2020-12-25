@@ -9,7 +9,7 @@ const ProfileCard = ({imgUrl, name, age, email, handleSwipe, isShow}) => {
         className='profile-card'
         hoverable
         style={cardStyle}
-        cover={<img alt="example" src={imgUrl} />}
+        cover={<img alt="example" style={{minHeight: 240}} src={imgUrl} />}
         actions={[
             <CloseOutlined key="dislike" onClick={() => handleSwipe('dislike')} />,
             <HeartOutlined key="heart" onClick={() => handleSwipe('like')} />,
