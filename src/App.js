@@ -7,7 +7,7 @@ import { getProfilesData } from './network'
 
 function skimProfileData(rawData){
   return rawData.map(({name, email, dob, picture}) => ({
-    name: name.first + ' ' + name.last,
+    name: `${name.first} ${name.last}`,
     email,
     age: dob.age,
     imgUrl: picture.large
