@@ -26,8 +26,8 @@ const SideBarMain = ({viewSelected, viewedProfiles}) => {
         {   
             profiles.length  
             ?
-            profiles.map(({imgUrl, lastName}) => {
-                return  <Col span={8} style={{height: 120}}>
+            profiles.map(({imgUrl, lastName}, index) => {
+                return  <Col span={8} style={{height: 120}} key={index}>
                     <img style={{ objectFit: 'cover', borderRadius: 4, width: '100%', height: '100%'}} src={imgUrl} />
                     <div style={{position: 'relative', borderRadius: '0px 0px 4px 4px', bottom: 22, paddingLeft: 8, fontWeight: '600', background: 'rgba(0,0,0,0.5)', color: 'white'}}>{lastName}</div>
                 </Col>         

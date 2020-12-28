@@ -3,8 +3,8 @@ import 'antd/dist/antd.css';
 //import './App.css';
 import ProfileCard from './components/profile-card';
 import {message, notification, Spin, Layout} from 'antd'
-import _ from 'lodash'
 import { getProfilesData } from './network' 
+import { debounce } from './utilities'
 
 import {SideBar} from './components/layout'
 
@@ -39,7 +39,7 @@ function App() {
     profiles.length - currentProfileIndex  - 1
   )
 
-  const debouncedSwipe = _.debounce(function handleSwipe(type){
+  const debouncedSwipe = debounce(function handleSwipe(type){
     const remainingProfileCount = countRemainingProfiles(currentProfileIndex, profiles)
     
     processCurrentCardAction();
