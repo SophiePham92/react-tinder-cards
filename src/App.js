@@ -55,7 +55,7 @@ function App() {
           }); 
         (async function getData (){              
           const {results: rawData} = await getProfilesData();
-          setProfiles(profiles.concat(skimProfileData(rawData)))    
+          setProfiles(skimProfileData(rawData))    
         })()
       }
       if(isLoading) {
