@@ -1,25 +1,12 @@
-import { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
-//import './App.css';
-import ProfileCard from './components/profile-card';
+import { useEffect, useState } from 'react';
 import {message, notification, Spin, Layout} from 'antd'
+import SideBar from './components/sidebar'
+import ProfileCard from './components/profile-card';
 import { getProfilesData } from './network' 
-import { debounce, getLocalViewedProfiles, setLocalViewedProfiles } from './utilities'
-
-import {SideBar} from './components/layout'
+import { debounce, getLocalViewedProfiles, setLocalViewedProfiles, skimProfileData } from './utilities'
 
 const { Footer,  Content } = Layout;
- 
-function skimProfileData(rawData){
-  return rawData.map(({name, email, dob, picture}) => ({
-    name: `${name.first} ${name.last}`,
-    email,
-    age: dob.age,
-    imgUrl: picture.large,
-    lastName: name.last 
-  }))
-}
-
 const REMAINING_PROFILES_THRESHOLD = 2;
 
 function App() {
@@ -31,8 +18,8 @@ function App() {
   useEffect(() => {
     (async function getData (){
       setViewedProfiles(getLocalViewedProfiles())
-      const {results: rawData} = await getProfilesData();
-      setProfiles(profiles.concat(skimProfileData(rawData)));
+      const {results} = await getProfilesData();
+      setProfiles(profiles.concat(skimProfileData(results)));
     })()  
   }, [])
 
@@ -82,8 +69,7 @@ function App() {
 
   const remainingProfileCount = countRemainingProfiles(currentProfileIndex, profiles) + 1;
   const isLoading = !remainingProfileCount;
-  //const shouldPrefetchProfile = remainingProfileCount <= REMAINING_PROFILES_THRESHOLD; 
-
+  
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <SideBar viewSelected={viewSelected} selectView={setViewSelected} viewedProfiles={viewedProfiles} />

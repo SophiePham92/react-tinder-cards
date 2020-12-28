@@ -15,3 +15,13 @@ export function getLocalViewedProfiles(){
 export function setLocalViewedProfiles(viewedProfiles){
     localStorage.setItem('viewedProfiles', JSON.stringify(viewedProfiles))
 }
+
+export function skimProfileData(rawData){
+  return rawData.map(({name, email, dob, picture}) => ({
+    name: `${name.first} ${name.last}`,
+    email,
+    age: dob.age,
+    imgUrl: picture.large,
+    lastName: name.last 
+  }))
+}
