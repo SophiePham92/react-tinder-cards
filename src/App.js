@@ -87,25 +87,21 @@ function App() {
       <SideBar viewSelected={viewSelected} selectView={setViewSelected} viewedProfiles={viewedProfiles} />
       <Layout>
         <Content style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          {
-          isLoading
-            ?
-            <Spin tip="Loading..."></Spin>
-            :
-            <div style={{position: 'relative', width: 240, height: 400}}>
-              {profiles.map(({name, age, email, imgUrl}, index) => {
-                return <ProfileCard 
-                    key={imgUrl + index}
-                    imgUrl={imgUrl} 
-                    name={name}
-                    age={age}
-                    email={email}
-                    handleSwipe={debouncedSwipe} 
-                    isShow={index === currentProfileIndex}
-                  />
-              })} 
-            </div>
-          }
+            <Spin spinning={isLoading}>
+              <div style={{position: 'relative', width: 240, height: 400}}>
+                {profiles.map(({name, age, email, imgUrl}, index) => {
+                  return <ProfileCard 
+                      key={imgUrl + index}
+                      imgUrl={imgUrl} 
+                      name={name}
+                      age={age}
+                      email={email}
+                      handleSwipe={debouncedSwipe} 
+                      isShow={index === currentProfileIndex}
+                    />
+                })} 
+              </div>
+            </Spin>
         </Content>
         <Footer style={{ textAlign: 'center' }}>React Swiper App ©2020 Created by Trang Pham</Footer>
       </Layout>
