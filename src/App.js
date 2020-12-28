@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import ProfileCard from './components/profile-card';
 import {message, notification, Spin, Layout} from 'antd'
 import { getProfilesData } from './network' 
-import { debounce } from './utilities'
+import { debounce, getLocalViewedProfiles, setLocalViewedProfiles } from './utilities'
 
 import {SideBar} from './components/layout'
 
@@ -30,6 +30,7 @@ function App() {
 
   useEffect(() => {
     (async function getData (){
+      setViewedProfiles(getLocalViewedProfiles())
       const {results: rawData} = await getProfilesData();
       setProfiles(profiles.concat(skimProfileData(rawData)));
     })()  
@@ -50,6 +51,7 @@ function App() {
         {...profiles[currentProfileIndex], liked: type === 'like'}
       )
       setViewedProfiles(changedViewedProfiles); 
+      setLocalViewedProfiles(changedViewedProfiles)
       type === 'like' ?
         message.success('What an awesome profile!', 0.3)
         : message.error('Not my type', 0.3);

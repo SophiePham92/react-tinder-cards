@@ -7,3 +7,11 @@ export function debounce(callback, wait) {
     }, wait);
   };
 }
+
+export function getLocalViewedProfiles(){
+    return JSON.parse(localStorage.getItem('viewedProfiles')) || []
+}
+
+export function setLocalViewedProfiles(viewedProfiles){
+    localStorage.setItem('viewedProfiles', JSON.stringify(viewedProfiles))
+}
