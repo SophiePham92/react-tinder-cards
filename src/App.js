@@ -8,7 +8,6 @@ import {
   debounce,
   getLocalViewedProfiles,
   setLocalViewedProfiles,
-  skimProfileData,
 } from "./utilities";
 
 const { Footer, Content } = Layout;
@@ -23,8 +22,8 @@ function App() {
   useEffect(() => {
     (async function getData() {
       setViewedProfiles(getLocalViewedProfiles());
-      const { results } = await getProfilesData();
-      setProfiles(profiles.concat(skimProfileData(results)));
+      const fetchedProfiles = await getProfilesData();
+      setProfiles([...profiles, ...fetchedProfiles]);
     })();
   }, []);
 
@@ -63,8 +62,8 @@ function App() {
           duration: 1,
         });
         (async function getData() {
-          const { results: rawData } = await getProfilesData();
-          setProfiles(skimProfileData(rawData));
+          const fetchedProfiles = await getProfilesData();
+          setProfiles([...profiles, ...fetchedProfiles]);
         })();
       }
       if (isLoading) {

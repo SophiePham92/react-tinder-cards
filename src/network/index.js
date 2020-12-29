@@ -1,5 +1,7 @@
-export function getProfilesData() {
-  return fetch("https://randomuser.me/api/?results=5").then((response) =>
-    response.json()
-  );
+import { skimProfileData } from "../utilities";
+
+export async function getProfilesData() {
+  const response = await fetch("https://randomuser.me/api/?results=5");
+  const { results } = await response.json();
+  return skimProfileData(results);
 }
