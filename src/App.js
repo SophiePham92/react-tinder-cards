@@ -16,7 +16,6 @@ const REMAINING_PROFILES_THRESHOLD = 2;
 function App() {
   const [profiles, setProfiles] = useState([]);
   const [viewedProfiles, setViewedProfiles] = useState([]);
-  const [currentProfileIndex, setProfileIndex] = useState(0);
   const [viewSelected, setViewSelected] = useState("favorites");
 
   useEffect(() => {
@@ -27,35 +26,27 @@ function App() {
     })();
   }, []);
 
-  const countRemainingProfiles = (currentProfileIndex, profiles) =>
-    profiles.length - currentProfileIndex - 1;
-
   const debouncedSwipe = debounce(function handleSwipe(type) {
-    const remainingProfileCount = countRemainingProfiles(
-      currentProfileIndex,
-      profiles
-    );
+    const [head, ...tail] = profiles;
 
     processCurrentCardAction();
     moveToNextCard();
 
     function processCurrentCardAction() {
-      const changedViewedProfiles = viewedProfiles.concat({
-        ...profiles[currentProfileIndex],
-        liked: type === "like",
-      });
-      setViewedProfiles(changedViewedProfiles);
-      setLocalViewedProfiles(changedViewedProfiles);
+      const updatedViewedProfiles = [
+        ...viewedProfiles,
+        { ...head, liked: type === "like" },
+      ];
+      setViewedProfiles(updatedViewedProfiles);
+      setLocalViewedProfiles(updatedViewedProfiles);
       type === "like"
         ? message.success("What an awesome profile!", 0.3)
         : message.error("Not my type", 0.3);
     }
 
     function moveToNextCard() {
-      const isTimeToPrefetchData =
-        remainingProfileCount <= REMAINING_PROFILES_THRESHOLD;
-      const isLoading = !remainingProfileCount;
-      setProfileIndex(currentProfileIndex + 1);
+      const isTimeToPrefetchData = tail.length <= REMAINING_PROFILES_THRESHOLD;
+      const isLoading = !tail.length;
       if (isTimeToPrefetchData) {
         notification.success({
           message: "Prefetch 5 more cards",
@@ -63,8 +54,10 @@ function App() {
         });
         (async function getData() {
           const fetchedProfiles = await getProfilesData();
-          setProfiles([...profiles, ...fetchedProfiles]);
+          setProfiles([...tail, ...fetchedProfiles]);
         })();
+      } else {
+        setProfiles([...tail]);
       }
       if (isLoading) {
         notification.warning({
@@ -74,10 +67,6 @@ function App() {
       }
     }
   }, 300);
-
-  const remainingProfileCount =
-    countRemainingProfiles(currentProfileIndex, profiles) + 1;
-  const isLoading = !remainingProfileCount;
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -94,7 +83,7 @@ function App() {
             alignItems: "center",
           }}
         >
-          <Spin spinning={isLoading}>
+          <Spin spinning={!profiles.length}>
             <div style={{ position: "relative", width: 240, height: 400 }}>
               {profiles.map(({ name, age, email, imgUrl }, index) => {
                 return (
@@ -105,7 +94,7 @@ function App() {
                     age={age}
                     email={email}
                     handleSwipe={debouncedSwipe}
-                    isShow={index === currentProfileIndex}
+                    isShow={index === 0}
                   />
                 );
               })}
