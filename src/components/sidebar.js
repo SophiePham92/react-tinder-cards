@@ -14,6 +14,7 @@ const SideBar = ({ viewSelected, selectView, viewedProfiles }) => {
           padding: "0 16px",
           fontFamily: "Comfortaa, sans-serif",
           fontWeight: "bold",
+          background: "linear-gradient(250deg, #335C81, #1B2845)",
         }}
       >
         <p style={{ color: "white", fontSize: "24px" }}>Hello Coder Push.</p>

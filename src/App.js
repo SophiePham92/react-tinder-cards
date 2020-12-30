@@ -1,9 +1,8 @@
 import "antd/dist/antd.css";
 import "./App.css";
 import { useEffect, useState } from "react";
-import { message, notification, Spin, Layout } from "antd";
+import { notification, Spin, Layout } from "antd";
 import SideBar from "./components/sidebar";
-import ProfileCard from "./components/profile-card";
 import { getProfilesData } from "./network";
 import {
   debounce,
