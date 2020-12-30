@@ -71,7 +71,7 @@ function getMovingStyle({ x, y, rotate, opacity = 1 }) {
   };
 }
 function getXYFromTransformCss(transformCss) {
-  const xyRegex = /\d{0,4}px/g;
+  const xyRegex = /(-|)\d{0,4}px/g;
   const [xInPixel, yInPixel] = transformCss.match(xyRegex);
   return {
     x: Number(xInPixel.replace("px", "")),
