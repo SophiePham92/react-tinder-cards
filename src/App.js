@@ -83,21 +83,6 @@ function App() {
         >
           <Spin spinning={!profiles.length}>
             <ProfileCards profiles={profiles} handleSwipe={debouncedSwipe} />
-            {/* <div style={{ position: "relative", width: 240, height: 400 }}>
-              {profiles.map(({ name, age, email, imgUrl }, index) => {
-                return (
-                  <ProfileCard
-                    key={imgUrl + index}
-                    imgUrl={imgUrl}
-                    name={name}
-                    age={age}
-                    email={email}
-                    handleSwipe={debouncedSwipe}
-                    isShow={index === 0}
-                  />
-                );
-              })}
-            </div> */}
           </Spin>
         </Content>
         <Footer style={{ textAlign: "center" }}>
