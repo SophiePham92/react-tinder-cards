@@ -1,7 +1,7 @@
 .swipingList {
   position: relative;
-  top: -240px;
-  left: -120px;
+  top: -220px;
+  left: -190px;
 }
 
 .swipingWrapper {
@@ -9,11 +9,16 @@
   width: 375px;
   height: 380px;
   background-color: #fff;
+  border-radius: 8px;
   transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
   -ms-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
 }
 
 .swipingMessage {
@@ -73,4 +78,46 @@
 
 .toolbarButton span {
   font-size: 24px !important;
+}
+
+.profileCard {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+  background-position: 50% 0%;
+  background-size: auto 100%;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.5s;
+  user-select: none;
+  cursor: pointer;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  -moz-user-select: none;
+}
+
+.profileCardDescription {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), #333);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+  -webkit-border-radius: 0 0 8px 8px;
+  -moz-border-radius: 0 0 8px 8px;
+  -ms-border-radius: 0 0 8px 8px;
+  -o-border-radius: 0 0 8px 8px;
+}
+
+.profileCardDescriptionTitle {
+  font-size: 32px;
+  color: #fff;
+  max-width: 80%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
 }

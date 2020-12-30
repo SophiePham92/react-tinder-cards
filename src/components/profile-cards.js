@@ -1,29 +1,37 @@
 import { useState } from "react";
-import ProfileCard from "./profile-card-1";
-import { Row, Button, Space } from "antd";
+import { Row, Button, Space, Typography } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 import css from "./component.module.css";
 
-const SwiperList = ({ profiles, setProfiles }) => {
-  const handleSwipeCard = () => {
-    const [removedProfile, ...remainProfiles] = profiles;
-    setProfiles(remainProfiles);
-  };
+const { Text } = Typography;
+
+const ProfileCards = ({ profiles, handleSwipe }) => {
   return (
     <div className={css.swipingList}>
       {profiles
         .slice()
         .reverse()
-        .map((profile, index) => {
+        .map(({ imgUrl, name, email, age }, index) => {
           return (
             <SwipableWrapper
-              key={profile.name}
+              key={name}
               className={css.swipingWrapper}
-              onSwipeLeft={handleSwipeCard}
-              onSwipeRight={handleSwipeCard}
+              onSwipeLeft={() => handleSwipe("skip")}
+              onSwipeRight={() => handleSwipe("like")}
             >
-              <ProfileCard key={Math.random()} {...profile} />
+              <div
+                className={css.profileCard}
+                style={{ backgroundImage: `url(${imgUrl})` }}
+              >
+                <div className={css.profileCardDescription}>
+                  <Text
+                    className={css.profileCardDescriptionTitle}
+                    strong
+                  >{`${name} ${age}`}</Text>
+                  <p>{email}</p>
+                </div>
+              </div>
               <span className={`${css.swipingMessage} ${css.likeMessage}`}>
                 LIKE
               </span>
@@ -41,13 +49,13 @@ const SwiperList = ({ profiles, setProfiles }) => {
             size="large"
             shape="circle"
             icon={<CloseOutlined size="large" />}
-            onClick={handleSwipeCard}
+            onClick={() => handleSwipe("skip")}
           />
           <Button
             className={css.toolbarButton}
             shape="circle"
             icon={<CheckOutlined style={{ color: "#52c41a" }} />}
-            onClick={handleSwipeCard}
+            onClick={() => handleSwipe("like")}
           />
         </Space>
       </Row>
@@ -138,4 +146,4 @@ const SwipableWrapper = ({
   );
 };
 
-export default SwiperList;
+export default ProfileCards;

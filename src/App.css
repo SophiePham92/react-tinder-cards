@@ -1,1 +1,16 @@
 @import "~antd/dist/antd.css";
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap");
+
+.ant-menu-item {
+  color: #274060 !important;
+}
+
+.ant-menu-item:hover {
+  color: #65afff !important;
+  border-color: #65afff !important;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  color: #65afff !important;
+  border-color: #65afff !important;
+}
