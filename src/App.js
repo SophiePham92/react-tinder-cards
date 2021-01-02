@@ -1,14 +1,15 @@
 import "antd/dist/antd.css";
+import "./App.css";
 import { useEffect, useState } from "react";
-import { message, notification, Spin, Layout } from "antd";
+import { notification, Spin, Layout } from "antd";
 import SideBar from "./components/sidebar";
-import ProfileCard from "./components/profile-card";
 import { getProfilesData } from "./network";
 import {
   debounce,
   getLocalViewedProfiles,
   setLocalViewedProfiles,
 } from "./utilities";
+import ProfileCards from "./components/profile-cards";
 
 const { Footer, Content } = Layout;
 const REMAINING_PROFILES_THRESHOLD = 2;
@@ -39,9 +40,6 @@ function App() {
       ];
       setViewedProfiles(updatedViewedProfiles);
       setLocalViewedProfiles(updatedViewedProfiles);
-      type === "like"
-        ? message.success("What an awesome profile!", 0.3)
-        : message.error("Not my type", 0.3);
     }
 
     function moveToNextCard() {
@@ -84,21 +82,7 @@ function App() {
           }}
         >
           <Spin spinning={!profiles.length}>
-            <div style={{ position: "relative", width: 240, height: 400 }}>
-              {profiles.map(({ name, age, email, imgUrl }, index) => {
-                return (
-                  <ProfileCard
-                    key={imgUrl + index}
-                    imgUrl={imgUrl}
-                    name={name}
-                    age={age}
-                    email={email}
-                    handleSwipe={debouncedSwipe}
-                    isShow={index === 0}
-                  />
-                );
-              })}
-            </div>
+            <ProfileCards profiles={profiles} handleSwipe={debouncedSwipe} />
           </Spin>
         </Content>
         <Footer style={{ textAlign: "center" }}>

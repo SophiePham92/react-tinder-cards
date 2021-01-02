@@ -9,7 +9,14 @@ const SideBar = ({ viewSelected, selectView, viewedProfiles }) => {
   );
   return (
     <Sider theme="light" width={320}>
-      <Header style={{ padding: "0 16px" }}>
+      <Header
+        style={{
+          padding: "0 16px",
+          fontFamily: "Comfortaa, sans-serif",
+          fontWeight: "bold",
+          background: "linear-gradient(250deg, #335C81, #1B2845)",
+        }}
+      >
         <p style={{ color: "white", fontSize: "24px" }}>Hello Coder Push.</p>
       </Header>
       <Menu
@@ -17,7 +24,11 @@ const SideBar = ({ viewSelected, selectView, viewedProfiles }) => {
         selectedKeys={[viewSelected]}
         mode="horizontal"
       >
-        <Menu.Item key="favorites" icon={<HeartOutlined />}>
+        <Menu.Item
+          style={{ marginRight: 0 }}
+          key="favorites"
+          icon={<HeartOutlined />}
+        >
           Favorites
         </Menu.Item>
         <Menu.Item key="skips" icon={<CloseOutlined />}>
